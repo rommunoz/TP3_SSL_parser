@@ -1,0 +1,54 @@
+Define ID como variable
+
+Número
+Define ID como variable con valor inicial
+
+Número
+ID
+Número
+Multplicación
+Suma
+Asignación
+Expresión
+
+ID
+Número
+Potenciación
+Expresión
+
+ID
+Número
+División
+Función
+Expresión
+
+Número
+Asignación con suma
+Asignación
+Expresión
+
+Número
+Número
+Suma
+Cierra paréntesis
+ID
+Cambio Signo
+Multplicación
+Expresión
+
+Número
+Expresión
+
+Error léxico: constante inválida: 12a3
+
+Error léxico: identificador inválido: a#2.4
+
+Error léxico REAL inválido: 2.3.4a2.3
+Error léxico: cadena desconocida: @@#;@
+
+Número
+syntax error, unexpected '*', expecting NUM or ID or '-' or '('
+
+ID
+Expresión
+
