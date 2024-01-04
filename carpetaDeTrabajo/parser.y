@@ -3,7 +3,6 @@
 #include "scanner.h"
 #define DIM_TOKENS 6
 int yylex(void);
-char *token_names[DIM_TOKENS] = {"Fin de Archivo", "var", "salir", "NL", "Identificador", "Numero"};
 }
 
 %defines "parser.h"
@@ -43,9 +42,9 @@ prog 	: sesion
 sesion 	: %empty
     | sesion linea NL			{printf("\n"); }
     ;
-linea   : expresion 					 {printf("Expresión\n"); }
+linea   : expresion				{printf("Expresión\n"); }
     | PR_VAR IDENTIFICADOR declaracion
-    | PR_SALIR							 {printf("Terminado el prog con la palabra reservada salir\n");}
+    | PR_SALIR					{printf("Terminado el prog con la palabra reservada salir\n");}
     ;
 declaracion : %empty			{printf("Se declaró una variable\n");}
 	| '=' expresion 			{printf("Se declaró una variable con valor inicial\n");}
@@ -55,7 +54,7 @@ expresion : aditiva
     ;
 expresionConAsignacion : IDENTIFICADOR operadorAsignacion expresion
     ;
-operadorAsignacion : '=' 		{printf("Asignación\n");}
+operadorAsignacion : '='		{printf("Asignación\n");}
     | OP_MENOS_IG				{printf("Asignación con resta\n");}
     | OP_MAS_IG					{printf("Asignación con suma\n");}
     | OP_POR_IG					{printf("Asignación con multiplicación\n");}
@@ -64,13 +63,13 @@ operadorAsignacion : '=' 		{printf("Asignación\n");}
 aditiva : termino
     | aditiva sumando			
     ;
-sumando : '+' termino 			{printf("Suma\n");}
+sumando : '+' termino			{printf("Suma\n");}
 	| '-' termino				{printf("Resta\n");}
 	;
 termino : factor
     | termino multiplicador 	
     ;
-multiplicador : '*' factor  	{printf("Multiplicación\n");}
+multiplicador : '*' factor		{printf("Multiplicación\n");}
 	| '/' factor				{printf("División\n");}
 factor  : potencia
     | '-' potencia %prec NEG	{printf("Se usó el '-' unario\n");}
@@ -83,10 +82,10 @@ potencia_ : %empty
 primaria_ : primaria
 	| '-' primaria %prec NEG	{printf("Se usó el '-' unario\n");}
 	;
-primaria : IDENTIFICADOR        {printf("ID '%s'\n", $<id>1);}
-    | NUMERO                    {printf("Número\n");}
+primaria : IDENTIFICADOR		{printf("ID '%s'\n", $<id>1);}
+    | NUMERO					{printf("Número\n");}
     | '(' expresion ')'			{printf("Cierra paréntesis\n");}
-    | FUNCION '(' expresion ')' {printf("Se llamó a la función '%s'\n", $<func>1); }
+    | FUNCION '(' expresion ')'	{printf("Se llamó a la función '%s'\n", $<func>1); }
     ;
 
 %%
