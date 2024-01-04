@@ -1,5 +1,4 @@
 # TP3-parser
-Sintaxis y semantica de los lenguajes
-Parser usando flex y bison
+Un parser usando la herramientas flex y bison
 
 Prof. Eduardo Zuñiga
