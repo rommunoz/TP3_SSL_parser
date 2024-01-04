@@ -1,0 +1,44 @@
+Define ID como variable
+
+Número
+Define ID como variable con valor inicial
+
+Número
+ID 'b'
+Número
+Multiplicación
+Suma
+Asignación
+Expresión
+
+ID 'b'
+Número
+Potenciación
+Expresión
+
+ID 'pi'
+Número
+División
+Se llamó a la función 'sin'
+Expresión
+
+Número
+Asignación con suma
+Asignación
+Expresión
+
+Número
+Número
+Suma
+Cierra paréntesis
+ID 'a'
+Se usó el '-' unario
+Multiplicación
+Expresión
+
+Número
+Expresión
+
+Error léxico: Constante inválida: '12a3'
+línea #10: syntax error, unexpected NL, expecting end of file
+No pertenece al LIC

@@ -7,6 +7,7 @@ int yylex(void);
 
 %defines "parser.h"
 %output "parser.c"
+%define parse.error verbose
 
 %token FDT PR_VAR PR_SALIR NL IDENTIFICADOR NUMERO
 
@@ -26,39 +27,33 @@ struct YYSTYPE {
     char* id;
     double nro;
 };
+extern int yylexerrs;
 }
 
 %define api.value.type {struct YYSTYPE}
 
-%type <reserv> PR_SALIR PR_VAR
-%type <func> FUNCION
-%type <id> IDENTIFICADOR
-%type <nro> NUMERO
-
 %%
 
-prog 	: sesion
+prog 	: sesion 				{if (yynerrs || yylexerrs) YYABORT;}
     ;
-sesion 	: %empty
+sesion 	: linea NL				{printf("\n"); }
     | sesion linea NL			{printf("\n"); }
     ;
 linea   : expresion				{printf("Expresión\n"); }
-    | PR_VAR IDENTIFICADOR declaracion
+    | PR_VAR IDENTIFICADOR definicion
     | PR_SALIR					{printf("Terminado el prog con la palabra reservada salir\n");}
     ;
-declaracion : %empty			{printf("Se declaró una variable\n");}
-	| '=' expresion 			{printf("Se declaró una variable con valor inicial\n");}
+definicion : %empty				{printf("Define ID como variable\n");}
+	| '=' expresion 			{printf("Define ID como variable con valor inicial\n");}
 	;
 expresion : aditiva
-    | expresionConAsignacion
+    | IDENTIFICADOR asignacion
     ;
-expresionConAsignacion : IDENTIFICADOR operadorAsignacion expresion
-    ;
-operadorAsignacion : '='		{printf("Asignación\n");}
-    | OP_MENOS_IG				{printf("Asignación con resta\n");}
-    | OP_MAS_IG					{printf("Asignación con suma\n");}
-    | OP_POR_IG					{printf("Asignación con multiplicación\n");}
-    | OP_DIV_IG					{printf("Asignación con división\n");}
+asignacion : '=' expresion		{printf("Asignación\n");}
+    | OP_MENOS_IG expresion		{printf("Asignación con resta\n");}
+    | OP_MAS_IG expresion		{printf("Asignación con suma\n");}
+    | OP_POR_IG expresion		{printf("Asignación con multiplicación\n");}
+    | OP_DIV_IG expresion		{printf("Asignación con división\n");}
     ;
 aditiva : termino
     | aditiva sumando			
