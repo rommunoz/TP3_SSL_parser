@@ -1,7 +1,7 @@
 %code top{
 #include <stdio.h>
 #include "scanner.h"
-#define DIM_TOKENS 6
+#include "string.h"
 int yylex(void);
 }
 
@@ -9,7 +9,7 @@ int yylex(void);
 %output "parser.c"
 %define parse.error verbose
 
-%token FDT PR_VAR PR_SALIR NL IDENTIFICADOR NUMERO
+%token PR_VAR PR_SALIR NL ID NUMERO
 
 %right '=' OP_MAS_IG OP_MENOS_IG OP_POR_IG OP_DIV_IG
 %left '-' '+'
@@ -22,10 +22,9 @@ int yylex(void);
 %code provides {
 void yyerror(const char *);
 struct YYSTYPE {
-    char* reserv;
-    char* func;
-    char* id;
-    double nro;
+    char*   func;
+    char*   id;
+    double  nro;
 };
 extern int yylexerrs;
 }
@@ -34,20 +33,21 @@ extern int yylexerrs;
 
 %%
 
-prog 	: sesion 				{if (yynerrs || yylexerrs) YYABORT;}
+programa: sesion 				{if (yynerrs || yylexerrs) YYABORT;}
     ;
-sesion 	: linea NL				{printf("\n"); }
+sesion 	: linea NL				{printf("\n"); }					
     | sesion linea NL			{printf("\n"); }
     ;
-linea   : expresion				{printf("Expresión\n"); }
-    | PR_VAR IDENTIFICADOR definicion
-    | PR_SALIR					{printf("Terminado el prog con la palabra reservada salir\n");}
+linea   : error
+	| expresion					{printf("Expresión\n"); }
+    | PR_VAR ID definicion
+    | PR_SALIR					{printf("Palabra reservada salir\n");}
     ;
 definicion : %empty				{printf("Define ID como variable\n");}
 	| '=' expresion 			{printf("Define ID como variable con valor inicial\n");}
 	;
 expresion : aditiva
-    | IDENTIFICADOR asignacion
+    | ID asignacion
     ;
 asignacion : '=' expresion		{printf("Asignación\n");}
     | OP_MENOS_IG expresion		{printf("Asignación con resta\n");}
@@ -66,21 +66,22 @@ termino : factor
     ;
 multiplicador : '*' factor		{printf("Multiplicación\n");}
 	| '/' factor				{printf("División\n");}
-factor  : potencia
-    | '-' potencia %prec NEG	{printf("Se usó el '-' unario\n");}
-    ;
-potencia : primaria potencia_
-    ;
-potencia_ : %empty
-	| '^' primaria_				{printf("Potenciación\n");}
 	;
-primaria_ : primaria
-	| '-' primaria %prec NEG	{printf("Se usó el '-' unario\n");}
+factor  : primaria potencia
+	| '-' primaria %prec NEG	{printf("Cambio de signo\n");}
+    ;
+potencia : %empty
+	| '^' primaria				{printf("Potenciación\n");}
 	;
-primaria : IDENTIFICADOR		{printf("ID '%s'\n", $<id>1);}
+primaria : ID invocacion		
     | NUMERO					{printf("Número\n");}
     | '(' expresion ')'			{printf("Cierra paréntesis\n");}
-    | FUNCION '(' expresion ')'	{printf("Se llamó a la función '%s'\n", $<func>1); }
+    ;
+invocacion : %empty             {printf("ID '%s'\n", yylval.id);}
+    | '(' expresion ')'         {if(strcmp(yylval.func, yylval.id) == 0) 
+                                    printf("Se llamó a la función '%s'\n", yylval.id);
+                                 else
+                                    printf("Error semántico: Invocación invalida '%s'\n", yylval.id); }
     ;
 
 %%
