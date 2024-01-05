@@ -1,0 +1,4 @@
+bison -d parser.y
+flex scanner.l
+gcc -Wall -o parsetest main.c parser.c scanner.c -LC:\\msys64\\ucrt64\\bin\\lfl
+parsetest.exe <pavada.txt >salidaPavada.txt

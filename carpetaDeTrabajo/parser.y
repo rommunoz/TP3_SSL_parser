@@ -9,7 +9,7 @@ int yylex(void);
 %output "parser.c"
 %define parse.error verbose
 
-%token PR_VAR PR_SALIR NL ID NUMERO
+%token PR_VAR PR_SALIR NL ID NRO
 
 %right '=' OP_MAS_IG OP_MENOS_IG OP_POR_IG OP_DIV_IG
 %left '-' '+'
@@ -22,7 +22,6 @@ int yylex(void);
 %code provides {
 void yyerror(const char *);
 struct YYSTYPE {
-    char*   func;
     char*   id;
     double  nro;
 };
@@ -35,7 +34,7 @@ extern int yylexerrs;
 
 programa: sesion 				{if (yynerrs || yylexerrs) YYABORT;}
     ;
-sesion 	: linea NL				{printf("\n"); }					
+sesion 	: linea NL								
     | sesion linea NL			{printf("\n"); }
     ;
 linea   : error
@@ -68,20 +67,17 @@ multiplicador : '*' factor		{printf("Multiplicación\n");}
 	| '/' factor				{printf("División\n");}
 	;
 factor  : primaria potencia
-	| '-' primaria %prec NEG	{printf("Cambio de signo\n");}
+	| '-' primaria %prec NEG	{printf("Cambio de signo\n"); }
     ;
 potencia : %empty
-	| '^' primaria				{printf("Potenciación\n");}
+	| '^' primaria				{printf("Potenciación\n"); /*revisar porque despues del menos debería ir un factor, pero existiría la posibilidad de escribir '------1' por ejemplo*/ }
 	;
 primaria : ID invocacion		
-    | NUMERO					{printf("Número\n");}
+    | NRO					{printf("Número\n");}
     | '(' expresion ')'			{printf("Cierra paréntesis\n");}
     ;
 invocacion : %empty             {printf("ID '%s'\n", yylval.id);}
-    | '(' expresion ')'         {if(strcmp(yylval.func, yylval.id) == 0) 
-                                    printf("Se llamó a la función '%s'\n", yylval.id);
-                                 else
-                                    printf("Error semántico: Invocación invalida '%s'\n", yylval.id); }
+    | '(' expresion ')'         {printf("Se llamó a la función '%s'\n", yylval.id); }
     ;
 
 %%

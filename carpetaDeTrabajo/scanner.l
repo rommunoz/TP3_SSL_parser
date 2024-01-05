@@ -11,7 +11,6 @@ char msg[120];
 %option noinput 
 %option nounput
 %option noyywrap
-%option debug
                       
 flotante            ([0-9]+([.][0-9]*)|[.][0-9]+)
 letra               [a-zA-Z]
@@ -23,10 +22,9 @@ idInvalido          {letra}[a-zA-Z0-9]*{fueraDelAlfabeto}.*
 
 var                         {return PR_VAR;}
 salir                       {return PR_SALIR;}
-a?(cos|sin|tan)|log|sqrt    {yylval.func = strdup(yytext); yylval.id = strdup(yytext); return ID;}
-{letra}[a-zA-Z0-9]*         {yylval.func = " "; yylval.id = strdup(yytext); return ID;} /*le asigno un espacio para que no quede en NULL, porque después debo acceder. Y esto para averiguar si es una funcion válida si se usa el ID con invocacion*/
+{letra}[a-zA-Z0-9]*         {yylval.id = strdup(yytext); return ID;} 
 \n                          {return NL;}
-{flotante}|[0-9]+           {yylval.nro = atof(yytext); return NUMERO;}
+{flotante}|[0-9]+           {yylval.nro = atof(yytext); return NRO;}
 -=                          return OP_MENOS_IG;
 \+=                         return OP_MAS_IG;
 \*=                         return OP_POR_IG;
