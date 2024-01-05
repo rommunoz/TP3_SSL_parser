@@ -77,7 +77,7 @@ primaria : ID invocacion
     | '(' expresion ')'			{printf("Cierra paréntesis\n");}
     ;
 invocacion : %empty             {printf("ID '%s'\n", yylval.id);}
-    | '(' expresion ')'         {printf("Se llamó a la función '%s'\n", yylval.id); }
+    | '(' expresion ')'         {printf("Llamado a función\n"); }
     ;
 
 %%
