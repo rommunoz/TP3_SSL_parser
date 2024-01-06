@@ -1,7 +1,7 @@
 %code top{
 #include <stdio.h>
+#include <string.h>
 #include "scanner.h"
-#include "string.h"
 int yylex(void);
 }
 
@@ -32,49 +32,49 @@ extern int yylexerrs;
 
 %%
 
-programa: sesion 				{if (yynerrs || yylexerrs) YYABORT;}
+programa: sesion                {if (yynerrs || yylexerrs) YYABORT;}
     ;
-sesion 	: linea NL								
-    | sesion linea NL			{printf("\n"); }
+sesion 	: linea NL
+    | sesion linea NL           {printf("\n"); }
     ;
 linea   : error
-	| expresion					{printf("Expresión\n"); }
+    | expresion                 {printf("Expresión\n"); }
     | PR_VAR ID definicion
-    | PR_SALIR					{printf("Palabra reservada salir\n");}
+    | PR_SALIR                  {printf("Palabra reservada salir\n");}
     ;
-definicion : %empty				{printf("Define ID como variable\n");}
-	| '=' expresion 			{printf("Define ID como variable con valor inicial\n");}
-	;
-expresion : aditiva
+definicion : %empty             {printf("Define ID como variable\n");}
+    | '=' expresion             {printf("Define ID como variable con valor inicial\n");}
+    ;
+expresion : aditiva 
     | ID asignacion
     ;
-asignacion : '=' expresion		{printf("Asignación\n");}
-    | OP_MENOS_IG expresion		{printf("Asignación con resta\n");}
-    | OP_MAS_IG expresion		{printf("Asignación con suma\n");}
-    | OP_POR_IG expresion		{printf("Asignación con multiplicación\n");}
-    | OP_DIV_IG expresion		{printf("Asignación con división\n");}
+asignacion : '=' expresion      {printf("Asignación\n");}
+    | OP_MENOS_IG expresion     {printf("Asignación con resta\n");}
+    | OP_MAS_IG expresion       {printf("Asignación con suma\n");}
+    | OP_POR_IG expresion       {printf("Asignación con multiplicación\n");}
+    | OP_DIV_IG expresion       {printf("Asignación con división\n");}
     ;
 aditiva : termino
     | aditiva sumando			
     ;
-sumando : '+' termino			{printf("Suma\n");}
-	| '-' termino				{printf("Resta\n");}
-	;
-termino : factor
-    | termino multiplicador 	
+sumando : '+' termino           {printf("Suma\n");}
+    | '-' termino               {printf("Resta\n");}
     ;
-multiplicador : '*' factor		{printf("Multiplicación\n");}
-	| '/' factor				{printf("División\n");}
-	;
+termino : factor
+    | termino multiplicador
+    ;
+multiplicador : '*' factor      {printf("Multiplicación\n");}
+    | '/' factor                {printf("División\n");}
+    ;
 factor  : primaria potencia
-	| '-' primaria %prec NEG	{printf("Cambio de signo\n"); }
+    | '-' primaria %prec NEG    {printf("Cambio de signo\n"); }
     ;
 potencia : %empty
-	| '^' primaria				{printf("Potenciación\n"); /*revisar porque despues del menos debería ir un factor, pero existiría la posibilidad de escribir '------1' por ejemplo*/ }
-	;
-primaria : ID invocacion		
-    | NRO					{printf("Número\n");}
-    | '(' expresion ')'			{printf("Cierra paréntesis\n");}
+    | '^' primaria              {printf("Potenciación\n"); /*revisar porque despues del menos debería ir un factor, pero existiría la posibilidad de escribir '------1' por ejemplo*/ }
+    ;
+primaria : ID invocacion
+    | NRO                       {printf("Número\n");}
+    | '(' expresion ')'         {printf("Cierra paréntesis\n");}
     ;
 invocacion : %empty             {printf("ID '%s'\n", yylval.id);}
     | '(' expresion ')'         {printf("Llamado a función\n"); }
