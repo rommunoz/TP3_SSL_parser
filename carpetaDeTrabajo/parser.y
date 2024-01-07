@@ -21,20 +21,16 @@ int yylex(void);
 
 %code provides {
 void yyerror(const char *);
-struct YYSTYPE {
-    char*   id;
-    double  nro;
-};
 extern int yylexerrs;
 }
 
-%define api.value.type {struct YYSTYPE}
+%define api.value.type {char *}
 
 %%
 
 programa: sesion                {if (yynerrs || yylexerrs) YYABORT;}
     ;
-sesion 	: linea NL
+sesion 	: linea NL              {printf("\n"); }
     | sesion linea NL           {printf("\n"); }
     ;
 linea   : error
@@ -66,18 +62,20 @@ termino : factor
 multiplicador : '*' factor      {printf("Multiplicación\n");}
     | '/' factor                {printf("División\n");}
     ;
-factor  : primaria potencia
-    | '-' primaria %prec NEG    {printf("Cambio de signo\n"); }
+factor  : primaria_ potencia    
     ;
 potencia : %empty
-    | '^' primaria              {printf("Potenciación\n"); /*revisar porque despues del menos debería ir un factor, pero existiría la posibilidad de escribir '------1' por ejemplo*/ }
+    | '^' factor                {printf("Potenciación\n");}
+    ;
+primaria_ : primaria
+    | '-' primaria %prec NEG    {printf("Cambio de signo\n");}
     ;
 primaria : ID invocacion
     | NRO                       {printf("Número\n");}
     | '(' expresion ')'         {printf("Cierra paréntesis\n");}
     ;
-invocacion : %empty             {printf("ID '%s'\n", yylval.id);}
-    | '(' expresion ')'         {printf("Llamado a función\n"); }
+invocacion : %empty                     {printf("ID\n");}
+    | '(' expresion ')' %prec FUNCION   {printf("Llamado a función\n"); }
     ;
 
 %%
