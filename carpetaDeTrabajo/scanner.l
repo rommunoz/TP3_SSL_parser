@@ -29,10 +29,10 @@ salir                       return PR_SALIR;
 \+=                         return OP_MAS_IG;
 \*=                         return OP_POR_IG;
 \/=                         return OP_DIV_IG;
-{idInvalido}                {yylexerrs++; printf("Error léxico: Identificador inválido: '%s'\n", yytext); return YYerror;}
-[0-9]+{letra}[a-zA-Z0-9]*   {yylexerrs++; printf("Error léxico: Constante inválida: '%s'\n", yytext); return YYerror;}
-{realInvalido}              {yylexerrs++; printf("Error léxico: Real inválido: '%s'\n", yytext); return YYerror;}
-{fueraDelAlfabeto}+         {yylexerrs++; printf("Error léxico: Cadena desconocida: '%s'\n", yytext); return YYerror;}
+{idInvalido}                {yylexerrs++; sprintf(msg, "Error léxico: Identificador inválido: '%s'", yytext); yyerror(msg); return YYerror;}
+[0-9]+{letra}[a-zA-Z0-9]*   {yylexerrs++; sprintf(msg, "Error léxico: Constante inválida: '%s'", yytext);  yyerror(msg); return YYerror;}
+{realInvalido}              {yylexerrs++; sprintf(msg, "Error léxico: Real inválido: '%s'", yytext); yyerror(msg); return YYerror;}
+{fueraDelAlfabeto}+         {yylexerrs++; sprintf(msg, "Error léxico: Cadena desconocida: '%s'", yytext); yyerror(msg); return YYerror;}
 [=^+/*()-]                  return yytext[0];
 .|\n                        //null;
 

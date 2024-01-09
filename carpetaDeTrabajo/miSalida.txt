@@ -4,22 +4,22 @@ Número
 Define ID como variable con valor inicial
 
 Número
-ID 'b'
+ID
 Número
 Multiplicación
 Suma
 Asignación
 Expresión
 
-ID 'b'
+ID
 Número
 Potenciación
 Expresión
 
-ID 'pi'
+ID
 Número
 División
-Se llamó a la función 'sin'
+Llamado a función
 Expresión
 
 Número
@@ -31,8 +31,8 @@ Número
 Número
 Suma
 Cierra paréntesis
-ID 'a'
-Se usó el '-' unario
+ID
+Cambio de signo
 Multiplicación
 Expresión
 
@@ -40,5 +40,19 @@ Número
 Expresión
 
 Error léxico: Constante inválida: '12a3'
-línea #10: syntax error, unexpected NL, expecting end of file
+
+Error léxico: Identificador inválido: 'a#2.4'
+
+Error léxico: Real inválido: '2.3.4a2.3'
+
+Error léxico: Cadena desconocida: '@@#;@'
+
+Número
+línea #13: syntax error, unexpected '*', expecting ID or NRO or '-' or '('
+
+ID
+Expresión
+
+Palabra reservada salir
+
 No pertenece al LIC
