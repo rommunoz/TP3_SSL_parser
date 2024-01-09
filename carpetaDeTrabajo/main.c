@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include "scanner.h"
 #include "parser.h"
-#define DIM_TOKENS 6
 
 int yylexerrs = 0;
 int main(void){
