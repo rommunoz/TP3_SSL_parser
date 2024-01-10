@@ -15,8 +15,6 @@ int yylex(void);
 %left 	'*' '/'
 %right 	'^'
 %precedence NEG
-%precedence FUNCION
-%precedence '(' ')'
 
 %code provides {
 void yyerror(const char *);
@@ -27,37 +25,36 @@ extern int yylexerrs;
 
 %%
 
-programa: sesion                { if (yynerrs || yylexerrs) YYABORT;}
+programa: sesion                    { if (yynerrs || yylexerrs) YYABORT;}
     ;
-sesion 	: linea                 { printf("\n"); }
-    | sesion linea              { printf("\n"); }
+sesion 	: linea                     { printf("\n"); }
+    | sesion linea                  { printf("\n"); }
     ;
-linea   :  expresion NL         { printf("Expresión\n"); }
+linea   :  sentencia NL             { printf("Expresión\n"); }
     | error NL
     | PR_VAR ID NL                  { printf("Define ID como variable\n");}
     | PR_VAR ID '=' expresion NL    { printf("Define ID como variable con valor inicial\n");}
-    | PR_SALIR NL                   { printf("Palabra reservada salir\n"); return (yynerrs || yylexerrs);}
+    | PR_SALIR NL                   { printf("Palabra reservada salir\n\n"); return (yynerrs || yylexerrs);}
     ;
-expresion : aditiva
-    | ID '=' expresion          { printf("Asignación\n"); }
-    | ID OP_MENOS_IG expresion  { printf("Asignación con resta\n"); }
-    | ID OP_MAS_IG expresion    { printf("Asignación con suma\n"); }
-    | ID OP_POR_IG expresion    { printf("Asignación con multiplicación\n"); }
-    | ID OP_DIV_IG expresion    { printf("Asignación con división\n"); }
+sentencia : expresion
+    | ID '=' sentencia              { printf("Asignación\n"); }
+    | ID OP_MAS_IG sentencia        { printf("Asignación con suma\n"); }
+    | ID OP_MENOS_IG sentencia      { printf("Asignación con resta\n"); }
+    | ID OP_POR_IG sentencia        { printf("Asignación con multiplicación\n"); }
+    | ID OP_DIV_IG sentencia        { printf("Asignación con división\n"); }
     ;
-aditiva : primaria               
-    | aditiva '+' aditiva       { printf("Suma\n");}			
-    | aditiva '-' aditiva       { printf("Resta\n");}	
-    | aditiva '*' aditiva       { printf("Multiplicación\n");}
-    | aditiva '/' aditiva       { printf("División\n");}
-    | aditiva '^' aditiva       { printf("Potenciación\n");}
-    | '-' primaria  %prec NEG   { printf("Cambio de signo\n");}		
+expresion : ID                      { printf("ID\n");}
+    | NRO                           { printf("Número\n");}
+    | expresion '+' expresion       { printf("Suma\n");}			
+    | expresion '-' expresion       { printf("Resta\n");}	
+    | expresion '*' expresion       { printf("Multiplicación\n");}
+    | expresion '/' expresion       { printf("División\n");}
+    | expresion '^' expresion       { printf("Potenciación\n");}
+    | '-' expresion  %prec NEG      { printf("Cambio de signo\n");}
+    | '(' expresion ')'             { printf("Cierra paréntesis\n");}
+    | ID '(' expresion ')'          { printf("Llamado a función\n");}
     ;
-primaria : ID                               { printf("ID\n");}
-    | NRO                                   { printf("Número\n");}
-    | '(' expresion ')'                     { printf("Cierra paréntesis\n");}
-    | ID '(' expresion ')' %prec FUNCION    { printf("Llamado a función\n");}	
-    ;
+
 
 %%
 

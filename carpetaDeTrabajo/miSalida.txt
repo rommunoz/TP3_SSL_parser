@@ -39,13 +39,13 @@ Expresión
 Número
 Expresión
 
-Error léxico: Constante inválida: '12a3'
+línea #9: Error léxico: Constante inválida: '12a3'
 
-Error léxico: Identificador inválido: 'a#2.4'
+línea #10: Error léxico: Identificador inválido: 'a#2.4'
 
-Error léxico: Real inválido: '2.3.4a2.3'
+línea #11: Error léxico: Real inválido: '2.3.4a2.3'
 
-Error léxico: Cadena desconocida: '@@#;@'
+línea #12: Error léxico: Cadena desconocida: '@@#;@'
 
 Número
 línea #13: syntax error, unexpected '*', expecting ID or NRO or '-' or '('
