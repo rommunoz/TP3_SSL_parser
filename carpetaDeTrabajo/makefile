@@ -15,7 +15,7 @@ parser.o: parser.c parser.h
 scanner.c scanner.h : scanner.l parser.y
 	flex scanner.l
 
-parser.c parser.h : scanner.l parser.y
+parser.c parser.h : scanner.l parser.y 
 	bison -d parser.y
 
 clean:

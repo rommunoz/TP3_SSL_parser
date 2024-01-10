@@ -1,10 +1,9 @@
 %code top{
 #include <stdio.h>
-#include <strings.h>
+#include <string.h>
 #include "scanner.h"
 int yylex(void);
 }
-
 %defines "parser.h"
 %output "parser.c"
 %define parse.error verbose
@@ -40,25 +39,19 @@ linea   :  expresion NL         { printf("Expresión\n"); }
     | PR_SALIR NL                   { printf("Palabra reservada salir\n"); return (yynerrs || yylexerrs);}
     ;
 expresion : aditiva
-    | ID '=' expresion          { printf("Asignación\n");}
-    | ID OP_MENOS_IG expresion  { printf("Asignación con resta\n");}
-    | ID OP_MAS_IG expresion    { printf("Asignación con suma\n");}
-    | ID OP_POR_IG expresion    { printf("Asignación con multiplicación\n");}
-    | ID OP_DIV_IG expresion    { printf("Asignación con división\n");}
+    | ID '=' expresion          { printf("Asignación\n"); }
+    | ID OP_MENOS_IG expresion  { printf("Asignación con resta\n"); }
+    | ID OP_MAS_IG expresion    { printf("Asignación con suma\n"); }
+    | ID OP_POR_IG expresion    { printf("Asignación con multiplicación\n"); }
+    | ID OP_DIV_IG expresion    { printf("Asignación con división\n"); }
     ;
-aditiva : termino               
-    | aditiva '+' termino       { printf("Suma\n");}			
-    | aditiva '-' termino       { printf("Resta\n");}			
-    ;
-termino : factor                
-    | termino '*' factor        { printf("Multiplicación\n");}
-    | termino '/' factor        { printf("División\n");}
-    ;
-factor  : primaria_ '^' factor  { printf("Potenciación\n");}
-    | primaria_                 
-    ;
-primaria_ : primaria            
-    | '-' primaria  %prec NEG   { printf("Cambio de signo\n");}
+aditiva : primaria               
+    | aditiva '+' aditiva       { printf("Suma\n");}			
+    | aditiva '-' aditiva       { printf("Resta\n");}	
+    | aditiva '*' aditiva       { printf("Multiplicación\n");}
+    | aditiva '/' aditiva       { printf("División\n");}
+    | aditiva '^' aditiva       { printf("Potenciación\n");}
+    | '-' primaria  %prec NEG   { printf("Cambio de signo\n");}		
     ;
 primaria : ID                               { printf("ID\n");}
     | NRO                                   { printf("Número\n");}
